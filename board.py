@@ -4,11 +4,30 @@ WIDTH, HEIGHT = 530, 580
 start_x, start_y = 37, 39
 space = 57
 
-
 tk = Tk()
-
 canvas = Canvas(tk, width=WIDTH, height=HEIGHT)
 canvas.pack()
+
+
+def init():
+    """ 棋盘初始化
+
+        棋盘使用一维数组表示，大小为256，中间90个索引代表有效棋盘
+        无效位置存储的值为-1，有效如果有子，用子对应的图片tag表示（大于0）
+        如果无子用0表示。也就是 16 X 16 个格子，有效位置左上角坐标为（4， 4），
+        右下角的坐标为（13， 12）
+    """
+    board = []
+    start_row = start_col = 3
+    end_row, end_col = 12, 11
+    for i in range(256):
+        pass
+
+    # 创建图片
+    pass
+
+
+
 
 # 棋盘
 img = PhotoImage(file='./img/bg.png')
