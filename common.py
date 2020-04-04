@@ -1,5 +1,8 @@
 IMG_PATH = './img/'
 
+# 棋盘
+BG = 'bg.png'
+
 # 棋子与图片对应关系
 # 黑方
 BLACK_VEHICLE = 'black_vehicle.png'
@@ -15,5 +18,3 @@ RED_ELEPHANT = 'red_elephant.png'
 RED_GENERAL = 'red_general.png'
 RED_GUARDER = 'red_guarder.png'
 RED_SOLDIE = 'red_soldie.png'
-
-
