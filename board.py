@@ -7,54 +7,131 @@ space = 57
 
 tk = Tk()
 canvas = Canvas(tk, width=WIDTH, height=HEIGHT)
-canvas.pack()
 
 
-def img_init():
-    # 棋盘
-    bg = PhotoImage(file='./img/bg.png')
+board = []
+pixel_board = []
+
+photo_image_dict = {}
+
+
+def index2xy(index):
+    """ 获取一维数组索引在棋盘上对应的x、y坐标，如果不在棋盘返回 None """
+    start_row = start_col = 3
+    end_row, end_col = 12, 11
+    if x < start_row or x > end_row or y < start_col or y > end_col:
+        return
+    x, y = divmod(index, 16)
+    return x - 3, y - 3
+
+def xy2index(x, y):
+    """ 棋盘上的x、y坐标在一维数组中对应的索引 """
+    return (x + 3) * 16 + y + 3
+
+def xy2pixel(x, y):
+    """ 获取棋盘中 x, y 坐标对应的像素 """
+    return start_x + x * space, start_y + y * space
+
+def pixel2xy(px, py):
+    """ 根据像素定位棋盘的x、y坐标 """
+    x = int((px - 4) / space)
+    y = int((py - 6)/ space)
+    return x, y
+
+def create_piece(x, y, img_str):
+    """ 创建棋子
+
+        传入棋盘位置x，y，和要创建的棋子图片
+    """
+    if img_str in photo_image_dict:
+        img = photo_image_dict[img_str]
+    else:
+        img = PhotoImage(file=IMG_PATH + img_str)
+        photo_image_dict[img_str] = img
+
+    canvas.create_image(*xy2pixel(x, y), image=img)
+    board[xy2index(x, y)] = PIECES_NUM[img_str]
+
+def bg_init():
+    """ 棋盘初始化 """
+    bg = PhotoImage(file=IMG_PATH + BG)
     canvas.create_image((WIDTH/2, HEIGHT/2), image=bg)
 
-    # 红方
-    # 车
-    red_vehicle = PhotoImage(file=IMG_PATH + RED_VEHICLE)
-    rv1 = canvas.create_image((start_x, start_y), image=red_vehicle)
-    rv2 = canvas.create_image((start_x, start_y + 8 * space), image=red_vehicle)
+def piece_init():
+	""" 棋子初始化 """
 
-    red_cannon = PhotoImage(file=IMG_PATH + RED_CANNON)
-    red_elephant = PhotoImage(file=IMG_PATH + RED_ELEPHANT)
-    red_general = PhotoImage(file=IMG_PATH + RED_GENERAL)
-    red_guarder = PhotoImage(file=IMG_PATH + RED_GUARDER)
-    red_soldie = PhotoImage(file=IMG_PATH + RED_SOLDIE)
+	# 红车
+	create_piece(0, 0, RED_VEHICLE)
+	create_piece(0, 8, RED_VEHICLE)
 
-    # 黑方
-    black_vehicle = PhotoImage(file=IMG_PATH + RED_VEHICLE)
-    black_cannon = PhotoImage(file=IMG_PATH + BLACK_CANNON)
-    black_elephant = PhotoImage(file=IMG_PATH + BLACK_ELEPHANT)
-    black_general = PhotoImage(file=IMG_PATH + BLACK_GENERAL)
-    black_guarder = PhotoImage(file=IMG_PATH + BLACK_GUARDER)
-    black_soldie = PhotoImage(file=IMG_PATH + BLACK_SOLDIE)
+    # 红马
+	create_piece(0, 1, RED_HORSE)
+	create_piece(0, 7, RED_HORSE)
+
+    # 红相
+	create_piece(0, 2, RED_ELEPHANT)
+	create_piece(0, 6, RED_ELEPHANT)
+
+    # 红仕
+	create_piece(0, 3, RED_GUARDER)
+	create_piece(0, 5, RED_GUARDER)
+
+    # 红帅
+	create_piece(0, 4, RED_GENERAL)
+
+    # 红兵
+	create_piece(3, 0, RED_SOLDIE)
+	create_piece(3, 2, RED_SOLDIE)
+	create_piece(3, 4, RED_SOLDIE)
+	create_piece(3, 6, RED_SOLDIE)
+	create_piece(3, 8, RED_SOLDIE)
+
+    # 黑车
+	create_piece(9, 0, BLACK_VEHICLE)
+	create_piece(9, 8, BLACK_VEHICLE)
+
+    # 黑马
+	create_piece(9, 1, BLACK_HORSE)
+	create_piece(9, 7, BLACK_HORSE)
+
+    # 黑象
+	create_piece(9, 2, BLACK_ELEPHANT)
+	create_piece(9, 6, BLACK_ELEPHANT)
+
+    # 黑士
+	create_piece(9, 3, BLACK_GUARDER)
+	create_piece(9, 5, BLACK_GUARDER)
+
+    # 黑将
+	create_piece(9, 4, BLACK_GENERAL)
+
+    # 黑卒
+	create_piece(6, 0, BLACK_SOLDIE)
+	create_piece(6, 2, BLACK_SOLDIE)
+	create_piece(6, 4, BLACK_SOLDIE)
+	create_piece(6, 6, BLACK_SOLDIE)
+	create_piece(6, 8, BLACK_SOLDIE)
 
 
 def board_init():
     """ 棋盘初始化
 
-        棋盘使用一维数组表示，大小为256，中间90个索引代表有效棋盘
-        无效位置存储的值为0，有效位置如果有子，用子对应的图片tag和像素表示（width, height, tag_id）
-        如果无子只存储像素（width, height）。也就是 16 X 16 个格子，有效位置左上角坐标为（4， 4），
-        右下角的坐标为（13， 12）
+        棋盘使用一维数组表示，大小为256，也就是 16 X 16 个格子，索引表示棋盘位置，
+        值为0表示没有棋子，8~14依次表示红方的帅、仕、相、马、车、炮和兵，16~22依次
+        表示黑方的将、士、象、马、车、炮和卒。
     """
-    board = []
-    start_row = start_col = 3
-    end_row, end_col = 12, 11
+   
     for i in range(256):
-        x, y = divmod(i, 16)
-        if x < 3 or x > 12 or y < 3 or y > 11:
-            board.append(0)
-        else:
-            board.append(())
+        board.append(0)
 
-    return board
+    bg_init()
+    piece_init()
+
+
+board_init()
+canvas.pack()
+tk.mainloop()
+
 
 # # 棋盘
 # img = PhotoImage(file='./img/bg.png')
