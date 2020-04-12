@@ -2,6 +2,7 @@ IMG_PATH = './img/'
 
 # 棋盘
 BG = 'bg.png'
+BOX = 'box.png'
 
 # 棋子与图片对应关系
 # 黑方
@@ -37,4 +38,21 @@ PIECES_NUM = {
     BLACK_VEHICLE: 20,
     BLACK_CANNON: 21,
     BLACK_SOLDIE: 22,
+}
+
+NUM_PIECES = {
+    8: RED_GENERAL,
+    9: RED_GUARDER,
+    10: RED_ELEPHANT,
+    11: RED_HORSE,
+    12: RED_VEHICLE,
+    13: RED_CANNON,
+    14: RED_SOLDIE,
+    16: BLACK_GENERAL,
+    17: BLACK_GUARDER,
+    18: BLACK_ELEPHANT,
+    19: BLACK_HORSE,
+    20: BLACK_VEHICLE,
+    21: BLACK_CANNON,
+    22: BLACK_SOLDIE,
 }
